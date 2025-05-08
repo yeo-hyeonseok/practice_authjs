@@ -1,9 +1,12 @@
+import { signInWithCredentials } from '@/serverActions/auth'
 import TextInput from '@/components/TextInput'
 
 export default function RegisterPage() {
   return (
     <div>
-      <form className="flex flex-col items-center gap-4">
+      <form
+        className="flex flex-col items-center gap-4"
+        action={signInWithCredentials}>
         <div className="flex flex-col gap-2">
           <TextInput name="id" />
           <TextInput name="displayName" />

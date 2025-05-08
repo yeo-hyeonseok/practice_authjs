@@ -1,10 +1,13 @@
 import Link from 'next/link'
+import { signInWithCredentials } from '@/serverActions/auth'
 import TextInput from '@/components/TextInput'
 
 export default function LoginPage() {
   return (
     <div className="flex flex-col items-center gap-4">
-      <form className="flex gap-2">
+      <form
+        className="flex gap-2"
+        action={signInWithCredentials}>
         <div className="flex flex-col gap-2">
           <TextInput name="id" />
           <TextInput name="password" />

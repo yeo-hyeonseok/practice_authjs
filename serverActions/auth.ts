@@ -3,7 +3,13 @@
 import { auth, signIn, signOut } from '@/auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
-  await signIn('credentials', {})
+  await signIn('credentials', {
+    id: formData.get('id') || '',
+    displayName: formData.get('displayName') || '',
+    email: formData.get('email') || '',
+    password: formData.get('password') || '',
+    redirectTo: '/'
+  })
 }
 
 export const signInWithGoogle = async () => {
@@ -11,6 +17,6 @@ export const signInWithGoogle = async () => {
 }
 
 export const signOutWithForm = async () => {
-  await signOut()
+  await signOut({ redirectTo: '/' })
 }
 export { auth as getSession }
