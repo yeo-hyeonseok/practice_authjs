@@ -12,22 +12,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
-        const { id, displayName, email, password } = credentials as User
-        const user = { id, displayName, email, password }
+        const user = credentials as User
 
-        if (displayName) {
-          //  <--- 회원가입 시 로직 --->
+        if (user.displayName) {
+          console.log('회원가입 로직')
           return user
         }
 
-        // <--- 로그인 시 로직 --->
+        console.log('로그인 로직')
         return user
       }
     })
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 60 * 60 * 24
+  },
   callbacks: {
-    authorized: async ({ auth }) => {
-      return !!auth
+    signIn: async () => {
+      return true
+    },
+    jwt: async ({ token }) => {
+      return token
+    },
+    session: async ({ session }) => {
+      return session
     }
   },
   trustHost: true
