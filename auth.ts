@@ -1,18 +1,11 @@
-import NextAuth from 'next-auth'
+import NextAuth, { User } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-
-interface User {
-  id?: string
-  displayName?: string
-  email?: string
-  password?: string
-}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
-        const user = credentials as User
+        const user = credentials as unknown as User
 
         if (user.displayName) {
           console.log('회원가입 로직')
@@ -32,10 +25,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: async () => {
       return true
     },
-    jwt: async ({ token }) => {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id
+        token.displayName = user.displayName
+      }
+
       return token
     },
-    session: async ({ session }) => {
+    session: async ({ session, token }) => {
+      if (token) {
+        session.user.id = token.id as string
+        session.user.displayName = token.displayName as string
+      }
+
       return session
     }
   },
