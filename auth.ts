@@ -1,7 +1,7 @@
 import NextAuth, { User } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
@@ -25,7 +25,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: async () => {
       return true
     },
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, trigger, session }) => {
+      if (trigger === 'update' && session) {
+        token.id = session.user.id
+        token.displayName = session.user.displayName
+        token.email = session.user.email
+
+        return token
+      }
+
       if (user) {
         token.id = user.id
         token.displayName = user.displayName

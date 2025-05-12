@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { auth, signIn, signOut } from '@/auth'
+import { auth, signIn, signOut, unstable_update } from '@/auth'
 
 export const signInWithCredentials = async (
   initialState: { message: string },
@@ -33,4 +33,17 @@ export const signInWithGoogle = async () => {
 export const signOutWithForm = async () => {
   await signOut({ redirectTo: '/' })
 }
+
+export const updateSession = async (formData: FormData) => {
+  await unstable_update({
+    user: {
+      id: (formData.get('id') as string) || '',
+      displayName: (formData.get('displayName') as string) || '',
+      email: (formData.get('email') as string) || ''
+    }
+  })
+
+  redirect('/')
+}
+
 export { auth as getSession }
