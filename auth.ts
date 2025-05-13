@@ -17,11 +17,17 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
     })
   ],
+  pages: {
+    signIn: '/login'
+  },
   session: {
     strategy: 'jwt',
     maxAge: 60 * 60 * 24
   },
   callbacks: {
+    authorized: async ({ auth }) => {
+      return !!auth
+    },
     signIn: async () => {
       return true
     },
