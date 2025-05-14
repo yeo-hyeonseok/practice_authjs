@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useActionState } from 'react'
 import { signInWithCredentials } from '@/serverActions/auth'
 import TextInput from '@/components/TextInput'
+import GoogleLoginButton from '@/components/GoogleLoginButton'
 
 export default function LoginPage() {
   const [state, action] = useActionState(signInWithCredentials, { message: '' })
@@ -25,6 +26,7 @@ export default function LoginPage() {
         href="/register">
         Sign up
       </Link>
+      <GoogleLoginButton className="mt-4" />
     </div>
   )
 }
