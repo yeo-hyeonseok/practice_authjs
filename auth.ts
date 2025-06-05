@@ -1,5 +1,6 @@
 import NextAuth, { User } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import Google from 'next-auth/providers/google'
 
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [
@@ -15,6 +16,15 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         console.log('로그인 로직')
         return user
       }
+    }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: 'consent' // 사용자에게 항상 동의 화면을 표시
+        }
+      }
     })
   ],
   pages: {
@@ -28,7 +38,11 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     authorized: async ({ auth }) => {
       return !!auth
     },
-    signIn: async () => {
+    signIn: async ({ account, profile }) => {
+      if (account?.provider === 'google') {
+        return !!profile?.email_verified
+      }
+
       return true
     },
     jwt: async ({ token, user, trigger, session }) => {
