@@ -40,7 +40,15 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     },
     signIn: async ({ account, profile }) => {
       if (account?.provider === 'google') {
-        return !!profile?.email_verified
+        const isVerified = profile?.email_verified
+
+        if (!isVerified) {
+          return `/error?message=${encodeURIComponent('Invalid Google account')}`
+        }
+
+        console.log('Google 로그인 로직')
+
+        return true
       }
 
       return true
